@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Payment Retry Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>💳 Payment Retry Dashboard</h1>
+
+<div class="form">
+
+<input
+id="orderId"
+placeholder="Order ID"
+/>
+
+<input
+id="amount"
+type="number"
+placeholder="Amount"
+/>
+
+<select id="status">
+
+<option value="FAILED" selected>FAILED</option>
+
+<option value="PENDING">
+PENDING
+</option>
+
+</select>
+
+<button onclick="createPayment()">
+Create Payment
+</button>
+
+</div>
+
+<hr>
+
+<button onclick="loadPayments()">
+Refresh Payments
+</button>
+
+
+<div id="payments"></div>
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
