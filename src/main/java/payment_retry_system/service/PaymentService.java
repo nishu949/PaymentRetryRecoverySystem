@@ -100,37 +100,52 @@ public void retryAllFailed() {
 
 }
 
-public Payment retryPayment(Long id) {
+public Payment retryPayment(Long id){
 
-    Payment payment =
-            repository.findById(id)
-                    .orElse(null);
+Payment payment =
+repository
+.findById(id)
+.orElse(null);
 
-    if(payment == null){
-        return null;
-    }
-
-    // allow retry only for failed
-    if(
-        !"FAILED".equals(
-                payment.getStatus()
-        )
-    ){
-        return payment;
-    }
-
-    // increase retry
-    payment.setRetryCount(
-            payment.getRetryCount() + 1
-    );
-
-    // recovery success immediately
-    payment.setStatus(
-            "SUCCESS"
-    );
-
-    return repository.save(
-            payment
-    );
+if(payment==null){
+return null;
 }
+
+if(
+!"FAILED".equals(
+payment.getStatus()
+)
+){
+return payment;
+}
+
+payment.setRetryCount(
+payment.getRetryCount()+1
+);
+
+// recover after 2 retries
+if(
+payment.getRetryCount()>=2
+){
+
+payment.setStatus(
+"SUCCESS"
+);
+
+}
+else{
+
+payment.setStatus(
+"FAILED"
+);
+
+}
+
+return repository.save(
+payment
+);
+
+}
+
+
 }

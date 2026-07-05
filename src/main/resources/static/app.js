@@ -1,7 +1,9 @@
-const API=
+const API =
 "http://localhost:8081/payments";
 
-function toast(message){
+let pendingTimers={};
+
+function toast(msg){
 
 const t=
 document.getElementById(
@@ -9,7 +11,7 @@ document.getElementById(
 );
 
 t.innerText=
-message;
+msg;
 
 t.classList.add(
 "show"
@@ -19,19 +21,42 @@ setTimeout(()=>{
 
 t.classList.remove(
 "show"
+
 );
 
-},2000);
+},1800);
 
 }
 
 async function loadPayments(){
 
+try{
+
 const res=
 await fetch(API);
 
-let data=
+if(
+!res.ok
+){
+
+toast(
+"Cannot load"
+);
+
+return;
+
+}
+
+const data=
 await res.json();
+
+if(
+!Array.isArray(
+data
+)
+){
+return;
+}
 
 data.sort(
 (a,b)=>
@@ -40,7 +65,82 @@ b.id-a.id
 
 let html="";
 
-data.forEach(p=>{
+for(
+const p
+of
+data
+){
+
+// only pending auto success
+if(
+p.status==="PENDING"
+&&
+!pendingTimers[p.id]
+){
+
+pendingTimers[p.id]=
+setTimeout(
+async()=>{
+
+try{
+
+const check=
+await fetch(
+API+"/"+p.id
+);
+
+const current=
+await check.json();
+
+if(
+current.status==="PENDING"
+){
+
+await fetch(
+API+"/"+p.id,
+{
+
+method:
+"PUT",
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify({
+
+status:
+"SUCCESS",
+
+retryCount:
+current.retryCount
+
+})
+
+}
+
+);
+
+}
+
+delete pendingTimers[p.id];
+
+await loadPayments();
+
+}
+catch(e){
+
+console.log(e);
+
+}
+
+},
+10000
+);
+
+}
 
 let cls=
 p.status==="SUCCESS"
@@ -53,29 +153,57 @@ p.status==="FAILED"
 :
 "pending";
 
-html += `
+html+=`
 
 <div class="card">
 
 <h2>${p.orderId}</h2>
 
-<p>₹ ${p.amount}</p>
+<p>
+₹ ${p.amount}
+</p>
 
 <p class="${cls}">
 ${p.status}
 </p>
 
 <p class="retryText">
-Retries: ${p.retryCount}
+Retries:
+${p.retryCount || 0}/2
 </p>
+
+${
+p.status?.trim()==="FAILED"
+
+?
+
+`
 
 <button
 class="retryBtn"
 onclick="retry(${p.id})">
 
-↻ Retry Payment
+↻ Retry
 
 </button>
+
+`
+
+:
+
+`
+
+<button
+class="retryBtn"
+disabled>
+
+✓ Completed
+
+</button>
+
+`
+
+}
 
 <button
 class="deleteBtn"
@@ -89,7 +217,7 @@ onclick="deletePayment(${p.id})">
 
 `;
 
-});
+}
 
 document
 .getElementById(
@@ -97,6 +225,17 @@ document
 )
 .innerHTML=
 html;
+
+}
+catch(e){
+
+console.log(e);
+
+toast(
+"Error"
+);
+
+}
 
 }
 
@@ -118,13 +257,13 @@ status.value,
 retryCount:0
 
 };
-console.log(payment);
 
 await fetch(
 API,
 {
 
-method:"POST",
+method:
+"POST",
 
 headers:{
 "Content-Type":
@@ -141,26 +280,8 @@ payment
 );
 
 toast(
-"Payment Created ✓"
+"Created ✓"
 );
-
-setTimeout(
-loadPayments,
-300
-);
-
-}
-
-async function deletePayment(id){
-
-await fetch(
-API+"/"+id,
-{
-method:"DELETE"
-}
-);
-
-toast("Deleted");
 
 await loadPayments();
 
@@ -168,34 +289,89 @@ await loadPayments();
 
 async function retry(id){
 
-const res =
+try{
+
+const res=
 await fetch(
-API+"/"+id+"/retry",
+API+
+"/"+
+id+
+"/retry",
 {
-method:"PUT"
+method:
+"PUT"
 }
 );
 
-const updated =
+if(
+!res.ok
+){
+
+toast(
+"Retry failed"
+);
+
+return;
+
+}
+
+const updated=
 await res.json();
 
-if(updated.status==="PENDING"){
+toast(
+
+updated.status==="SUCCESS"
+
+?
+
+"Recovered ✓"
+
+:
+
+`Retry ${updated.retryCount}/2`
+
+);
+
+await loadPayments();
+
+}
+catch{
 
 toast(
-"Only FAILED payments can retry"
+"Retry failed"
 );
 
 }
-else{
-
-toast(
-`Recovered ✓ Retry ${updated.retryCount}`
-);
 
 }
+
+async function deletePayment(id){
+
+await fetch(
+API+
+"/"+
+id,
+{
+method:
+"DELETE"
+}
+);
+
+toast(
+"Deleted"
+);
 
 await loadPayments();
 
 }
 
+window.onload=()=>{
+
 loadPayments();
+
+setInterval(
+loadPayments,
+20000
+);
+
+};

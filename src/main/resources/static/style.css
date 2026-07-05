@@ -164,7 +164,7 @@ show .5s;
 .card:hover{
 
 transform:
-scale(1.05);
+translateY(-4px);
 
 }
 
@@ -250,7 +250,7 @@ border:none;
 
 .deleteBtn:hover{
 
-background:#c9302c;
+background:#b92d2a;
 
 }
 
@@ -258,8 +258,51 @@ background:#c9302c;
 
 font-weight:600;
 
-color:#666;
+color:#ffffff;
 
 margin-top:8px;
+
+opacity:.85;
+
+}
+.card button{
+
+margin-top:10px;
+
+}
+
+.card h2{
+
+margin-bottom:10px;
+
+}
+
+.card p{
+
+margin:6px 0;
+
+}
+
+hr{
+
+border:none;
+
+height:1px;
+
+background:
+rgba(
+255,
+255,
+255,
+0.15
+);
+
+margin:25px 0;
+
+}
+
+#payments{
+
+margin-top:25px;
 
 }
