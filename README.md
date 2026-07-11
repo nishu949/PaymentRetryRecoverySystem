@@ -108,27 +108,6 @@ SUCCESS       FAILED
      RECOVERED      PERMANENT FAILURE
 ```
 
-## 📸 Screenshots
-
-### Dashboard
-
-<img width="1920" height="876" alt="whole screen " src="https://github.com/user-attachments/assets/6042b4d8-40a9-4955-bc12-488d8866bdaf" />
-
-
-### Payment Management
-
-<img width="1567" height="852" alt="payment table " src="https://github.com/user-attachments/assets/b70a1c3e-cde6-4fad-b20c-e0037fb31136" />
-
-
-### Retry History
-
-<img width="1091" height="695" alt="history " src="https://github.com/user-attachments/assets/b401fbd1-8830-4a98-8cc5-f65aa96bdc25" />
-
-### Analytics
-
-<img width="1507" height="422" alt="charts " src="https://github.com/user-attachments/assets/b0f10f59-ff29-47eb-9b60-1f73e92c53c7" />
-
-
 ## Getting Started
 
 ### Clone Repository
