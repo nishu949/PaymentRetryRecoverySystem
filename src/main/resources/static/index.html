@@ -1,56 +1,494 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-<title>Payment Retry Dashboard</title>
-<link rel="stylesheet" href="style.css">
+
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:,">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Payment Retry & Recovery System</title>
+
+    <!-- Bootstrap -->
+<link rel="stylesheet" href="/css/style.css">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
 </head>
 
 <body>
 
-<h1>💳 Payment Retry Dashboard</h1>
+<div class="wrapper">
 
-<div class="form">
+    <!--  Sidebar  -->
 
-<input
-id="orderId"
-placeholder="Order ID"
-/>
+    <aside class="sidebar">
 
-<input
-id="amount"
-type="number"
-placeholder="Amount"
-/>
+        <div class="logo">
 
-<select id="status">
+            <i class="bi bi-credit-card-2-front-fill"></i>
 
-<option value="FAILED" selected>FAILED</option>
+            <span>PaymentRetry</span>
 
-<option value="PENDING">
-PENDING
-</option>
+        </div>
 
-</select>
+   <ul>
 
-<button onclick="createPayment()">
-Create Payment
-</button>
+<li id="dashboardMenu" class="active">
+    <i class="bi bi-speedometer2"></i>
+    Dashboard
+</li>
+
+<li id="paymentsMenu">
+    <i class="bi bi-wallet2"></i>
+    Payments
+</li>
+
+<li id="createMenu">
+    <i class="bi bi-plus-circle"></i>
+    Create Payment
+</li>
+
+<li id="analyticsMenu">
+    <i class="bi bi-bar-chart-line"></i>
+    Analytics
+</li>
+
+<li id="historyMenu">
+    <i class="bi bi-clock-history"></i>
+    Retry History
+</li>
+
+
+</ul>
+
+    </aside>
+
+  <!-- Main content -->
+
+    <main class="content">
+
+        <!-- Topbar -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h2>
+
+                    Payment Retry & Recovery Dashboard
+
+                </h2>
+
+                <small>
+
+                    Monitor payment recovery in real time
+
+                </small>
+
+            </div>
+
+            <div class="profile">
+
+                <i class="bi bi-person-circle"></i>
+
+                <span>Administrator</span>
+
+            </div>
+
+        </header>
+
+        <!-- Dashboard Cards -->
+
+        <section class="cards" id="dashboardSection">
+
+            <div class="dashboard-card">
+
+                <div>
+
+                    <h6>Total Payments</h6>
+
+                    <h2 id="totalPayments">0</h2>
+
+                </div>
+
+                <i class="bi bi-wallet2"></i>
+
+            </div>
+
+            <div class="dashboard-card success">
+
+                <div>
+
+                    <h6>Successful</h6>
+
+                    <h2 id="successfulPayments">0</h2>
+
+                </div>
+
+                <i class="bi bi-check-circle-fill"></i>
+
+            </div>
+
+            <div class="dashboard-card failed">
+
+                <div>
+
+                    <h6>Failed</h6>
+
+                    <h2 id="failedPayments">0</h2>
+
+                </div>
+
+                <i class="bi bi-x-circle-fill"></i>
+
+            </div>
+
+            <div class="dashboard-card recovered">
+
+                <div>
+
+                    <h6>Recovered</h6>
+
+                    <h2 id="recoveredPayments">0</h2>
+
+                </div>
+
+                <i class="bi bi-arrow-repeat"></i>
+
+            </div>
+
+        </section>
+
+        <!-- Charts -->
+
+        <section class="charts" id="analyticsSection">
+
+            <div class="chart-card">
+
+                <h5>
+
+                    Payment Statistics
+
+                </h5>
+
+                <canvas id="paymentChart"></canvas>
+
+            </div>
+
+            <div class="chart-card">
+
+                <h5>
+
+                    Recovery Rate
+
+                </h5>
+
+                <canvas id="recoveryChart"></canvas>
+
+            </div>
+
+        </section>
+
+        <!-- Payment Management -->
+
+        <section class="payment-section" id="paymentSection">
+
+            <div class="section-header">
+
+                <h4>
+
+                    Payment Management
+
+                </h4>
+
+                <button
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#paymentModal">
+
+                    <i class="bi bi-plus-circle"></i>
+
+                    Create Payment
+
+                </button>
+
+            </div>
+
+           <div class="row mb-3">
+
+    <div class="col-md-6">
+
+        <input
+            type="text"
+            id="searchInput"
+            class="form-control"
+            placeholder="Search For Payment Here ...">
+
+    </div>
+
+    <div class="col-md-3">
+
+        <select id="statusFilter" class="form-select">
+
+            <option value="" selected>All Status</option>
+            <option value="SUCCESS">SUCCESS</option>
+            <option value="FAILED">FAILED</option>
+            <option value="RECOVERED">RECOVERED</option>
+            <option value="PERMANENT_FAILURE">PERMANENT FAILURE</option>
+            <option value="PENDING">PENDING</option>
+
+        </select>
+
+    </div>
+
+</div>
+ 
+
+            <div class="table-responsive">
+                
+
+                <table class="table table-hover align-middle">
+                
+                    <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Order ID</th>
+
+                        <th>Amount</th>
+
+                        <th>Status</th>
+
+                        <th>Failure Reason</th>
+
+                        <th>Retries</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="paymentTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
 
 </div>
 
-<hr>
+<!--  Create Payment Modal -->
 
-<button onclick="loadPayments()">
-Refresh Payments
+<div
+        class="modal fade"
+        id="paymentModal">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5>
+
+                    Create Payment
+
+                </h5>
+
+                <button
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form id="paymentForm">
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Order ID
+
+                        </label>
+
+                        <input
+                                type="text"
+                                id="orderId"
+                                class="form-control"
+                                required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Amount
+
+                        </label>
+
+                        <input
+                                type="number"
+                                id="amount"
+                                class="form-control"
+                                required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Status
+
+                        </label>
+
+                        <select
+                                id="status"
+                                class="form-select">
+
+                            <option>PENDING</option>
+                            <option>SUCCESS</option>
+                            <option>FAILED</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>
+
+                            Failure Reason
+
+                        </label>
+
+                        <select
+                                id="failureReason"
+                                class="form-select">
+
+                            <option>NONE</option>
+                            <option>NETWORK_ERROR</option>
+                            <option>SERVER_ERROR</option>
+                            <option>INSUFFICIENT_FUNDS</option>
+                            <option>CARD_DECLINED</option>
+                            <option>OTP_EXPIRED</option>
+                            <option>BANK_TIMEOUT</option>
+
+                        </select>
+
+                    </div>
+<button type="submit" class="btn btn-primary w-100">
+    Create Payment
 </button>
 
+                </form>
 
-<div id="payments"></div>
-<div id="toast" class="toast"></div>
+            </div>
 
-<script src="app.js"></script>
+        </div>
 
+    </div>
+
+</div>
+
+<!-- Retry History Modal -->
+
+<div
+        class="modal fade"
+        id="historyModal">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5>
+
+                    Retry History
+
+                </h5>
+
+                <button
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+
+            </div>
+
+            <div
+                    class="modal-body"
+                    id="historyContainer">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="js/app.js"></script>
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+    <div
+        id="liveToast"
+        class="toast text-bg-success border-0"
+        role="alert">
+
+        <div class="d-flex">
+
+            <div
+                class="toast-body"
+                id="toastMessage">
+
+                Success
+
+            </div>
+
+            <button
+                type="button"
+                class="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast">
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 </body>
 
 </html>

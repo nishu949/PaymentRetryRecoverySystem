@@ -6,16 +6,18 @@ import jakarta.persistence.*;
 public class Payment {
 
     @Id
-    @GeneratedValue(
-        strategy = GenerationType.IDENTITY
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String orderId;
 
     private Double amount;
 
-    private String status = "PENDING";
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status = PaymentStatus.PENDING;
+
+    @Enumerated(EnumType.STRING)
+    private FailureReason failureReason = FailureReason.NONE;
 
     private Integer retryCount = 0;
 
@@ -43,12 +45,20 @@ public class Payment {
         this.amount = amount;
     }
 
-    public String getStatus() {
+    public PaymentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(PaymentStatus status) {
         this.status = status;
+    }
+
+    public FailureReason getFailureReason() {
+        return failureReason;
+    }
+
+    public void setFailureReason(FailureReason failureReason) {
+        this.failureReason = failureReason;
     }
 
     public Integer getRetryCount() {
@@ -58,5 +68,4 @@ public class Payment {
     public void setRetryCount(Integer retryCount) {
         this.retryCount = retryCount;
     }
-
 }
