@@ -107,9 +107,10 @@ SUCCESS       FAILED
           ▼               ▼
      RECOVERED      PERMANENT FAILURE
 
+
 ## ScreenShots
 
-#Create Payment Module
+# Create Payment Module
 ![Create Payment](screenshots/CreatePayment.png)
 
 # Retry Payment and Recovery Dashboard
@@ -121,11 +122,12 @@ SUCCESS       FAILED
 # Payment Status
 ![Payment Status](screenshots/PaymentStatus.png)
 
-#Payment Retry History 
-![Retry History](screenshots/RetryHistory .png)
+# Payment Retry History 
+![Retry History](screenshots/RetryHistory.png)
 
 # Payment Analysis
 ![Payment Analysis](screenshots/PaymentStatAndRecovery.png)
+
 
 
 
