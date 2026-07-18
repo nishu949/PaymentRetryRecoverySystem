@@ -106,8 +106,6 @@ SUCCESS       FAILED
           ┌───────────────┐
           ▼               ▼
      RECOVERED      PERMANENT FAILURE
-```
-
 
 ## ScreenShots
 
