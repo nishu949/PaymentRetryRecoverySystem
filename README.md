@@ -111,6 +111,26 @@ SUCCESS       FAILED
 
 ## ScreenShots
 
+#Create Payment Module
+![Create Payment](screenshots/CreatePayment.png)
+
+# Retry Payment and Recovery Dashboard
+![Payment Dashboard](screenshots/Dashboard.png)
+
+# Payment Table
+![Payment Table](screenshots/PaymentTable.png)
+
+# Payment Status
+![Payment Status](screenshots/PaymentStatus.png)
+
+#Payment Retry History 
+![Retry History](screenshots/RetryHistory .png)
+
+# Payment Analysis
+![Payment Analysis](screenshots/PaymentStatAndRecovery.png)
+
+
+
 ## Getting Started
 ### Clone Repository
 
