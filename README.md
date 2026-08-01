@@ -133,8 +133,6 @@ SUCCESS       FAILED
 ![Payment Analysis](screenshots/PaymentStatAndRecovery.png)
 
 
-
-
 ## Getting Started
 ### Clone Repository
 
