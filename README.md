@@ -168,6 +168,7 @@ Open
 
 ```
 http://localhost:8081
+http://localhost:8080/swagger-ui/index.html
 ```
 # Deployment Guide: PaymentRetryRecoverySystem
 
